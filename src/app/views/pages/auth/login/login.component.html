@@ -1,0 +1,37 @@
+<!--begin::Body-->
+<div class="kt-login__body">
+	<!--begin::Signin-->
+	<div class="kt-login__form">
+		<div class="kt-login__title">
+			<h3>{{ 'AUTH.GENERAL.LOGIN' | translate }}</h3>
+		</div>
+
+		<kt-auth-notice></kt-auth-notice>
+
+		<!--begin::Divider-->
+		<!--
+		<div class="kt-login__divider">
+			<div class="kt-divider">
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+		-->
+		<!--end::Divider-->
+
+		<!--begin::Options-->
+		<div class="kt-login__options">
+			<a (click)="login()" target="_blank" class="btn btn-primary kt-btn" style="margin: 30px; color: white;">
+				<i class="la la-industry"></i>
+				{{ 'AUTH.GENERAL.INTERNAL' | translate }}
+			</a>
+			<!-- <a (click)="login()" class="btn btn-primary kt-btn" style="margin: 10px;">
+				<i class="la la-user"></i>
+				{{ 'AUTH.GENERAL.EXTERNAL' | translate }}
+			</a> -->
+		</div>
+		<!--end::Options-->
+	</div>
+	<!--end::Signin-->
+</div>
+<!--end::Body-->

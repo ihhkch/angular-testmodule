@@ -1,0 +1,485 @@
+<h1 class="h2 mb-3">{{'OPERATIONAL_PRACTICES.REPORT_TITLE' | translate}}</h1>
+
+<mat-tab-group (selectedTabChange)="onLinkClick($event)">
+	<mat-tab [label]="'OPERATIONAL_PRACTICES.SERVICE_BRAKE' | translate">
+
+		<mat-progress-bar *ngIf="loadingServiceFilters" mode="indeterminate"></mat-progress-bar>
+		<div class="bg-white pl-3 pt-3 pr-3 mb-3">
+			<div class="row">
+				<div class="col">
+					<mat-form-field class="example-full-width">
+						<input matInput [(ngModel)]="serviceBrakeStartDate" [ngModelOptions]="{standalone: true}"
+							[max]="serviceBrakeEndDate" [matDatepicker]="serviceBrakeStartDatePicker"
+							(click)="serviceBrakeStartDatePicker.open()" (ngModelChange)="loadServiceBrakeFilters()"
+							[disabled]="loadingServiceFilters" readonly
+							[placeholder]="'ROAD_CONDITION.FROM' | translate">
+						<mat-datepicker-toggle matSuffix [for]="serviceBrakeStartDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #serviceBrakeStartDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<div class="col">
+					<mat-form-field class="example-full-width">
+						<input matInput [(ngModel)]="serviceBrakeEndDate" [ngModelOptions]="{standalone: true}"
+							[min]="serviceBrakeStartDate" [matDatepicker]="serviceBrakeEndDatePicker"
+							(click)="serviceBrakeEndDatePicker.open()" (ngModelChange)="loadServiceBrakeFilters()"
+							[disabled]="loadingServiceFilters" readonly [placeholder]="'ROAD_CONDITION.TO' | translate">
+						<mat-datepicker-toggle matSuffix [for]="serviceBrakeEndDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #serviceBrakeEndDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
+
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.WORK_SHIFT' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedServiceWorkShift" [disabled]="loadingServiceFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let jornada of serviceBrakeFilters?.data?.jornada" [value]="jornada">
+								{{jornada}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.GROUP' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedServiceGroup" [disabled]="loadingServiceFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let turno of serviceBrakeFilters?.data?.turno" [value]="turno">
+								{{turno}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.WORKER' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedServiceWorker" [disabled]="loadingServiceFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let operador of serviceBrakeFilters?.data?.operador" [value]="operador">
+								{{operador}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.SPEED' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedServiceSpeed" [disabled]="loadingServiceFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let velocidad of serviceBrakeFilters?.data?.velocidad"
+								[value]="velocidad">
+								{{velocidad}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+
+				<div class="col text-right">
+					<button mat-raised-button color="primary" (click)="loadServiceBrakeData()"
+						[disabled]="loadingServiceFilters">{{'OPERATIONAL_PRACTICES.FILTER' | translate}}</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_DAY' | translate }}</h5>
+				<mat-progress-bar *ngIf="loadingServiceBrakeByDay" mode="indeterminate"></mat-progress-bar>
+				<div class="bg-white pl-3 pr-3">
+					<canvas id="brakeServiceByDayChart" width="500" height="275">{{ brakeServiceByDayChart }}</canvas>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-sm-6 mb-3">
+						<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_GROUP' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingServiceBrakeByGroup" mode="indeterminate"></mat-progress-bar>
+						<div class="card p-3">
+							<canvas id="brakeServiceByGroupChart" width="300"
+								height="300">{{ brakeServiceByGroupChart }}</canvas>
+						</div>
+					</div>
+					<div class="col-sm-6 mb-3">
+						<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_SWITCH' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingServiceBrakeByWorkShift" mode="indeterminate">
+						</mat-progress-bar>
+						<div class="card p-3">
+							<canvas id="brakeServiceByWorkShiftChart" width="300"
+								height="300">{{ brakeServiceByWorkShiftChart }}</canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6 mb-3">
+				<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_SPEED' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingServiceBrakeBySpeed" mode="indeterminate"></mat-progress-bar>
+				<div class="table-container">
+					<table mat-table [dataSource]="serviceDataSource">
+
+						<ng-container matColumnDef="index">
+							<th mat-header-cell *matHeaderCellDef></th>
+							<td mat-cell *matCellDef="let i = index">{{i + 1}} </td>
+							<td mat-footer-cell *matFooterCellDef></td>
+						</ng-container>
+
+						<ng-container matColumnDef="worker">
+							<th mat-header-cell *matHeaderCellDef>
+								{{'OPERATIONAL_PRACTICES.WORKER' | translate}}
+							</th>
+							<td mat-cell *matCellDef="let speedData"> {{speedData.operador}} </td>
+							<td mat-footer-cell *matFooterCellDef></td>
+						</ng-container>
+
+						<ng-container matColumnDef="caex">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> CAEX </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell">
+								{{speedData.caex}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">Total:</td>
+						</ng-container>
+
+						<ng-container matColumnDef="speed">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell">
+								{{'OPERATIONAL_PRACTICES.SPEED' | translate}}
+							</th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell">
+								{{speedData.velocidad}} </td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getServiceBrakeAverageSpeed()}}
+							</td>
+						</ng-container>
+
+						<ng-container matColumnDef="total">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> Total </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell">
+								{{speedData.rng20 + speedData.rng2030 + speedData.rng3040 + speedData.rng4050 + speedData.rng50}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getServiceBrakeCumulativeTotal('rng20')+getServiceBrakeCumulativeTotal('rng2030')+getServiceBrakeCumulativeTotal('rng3040')+getServiceBrakeCumulativeTotal('rng4050')+getServiceBrakeCumulativeTotal('rng50')}}
+							</td>
+						</ng-container>
+
+						<ng-container matColumnDef="20">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> &lt;20 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getServiceEventsCellBgColorByValue(speedData.rng20,'rng20')">
+								{{speedData.rng20}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getServiceBrakeCumulativeTotal('rng20')}}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="2030">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> 20-30 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getServiceEventsCellBgColorByValue(speedData.rng2030,'rng2030')">
+								{{speedData.rng2030}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getServiceBrakeCumulativeTotal('rng2030')}}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="3040">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> 30-40 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getServiceEventsCellBgColorByValue(speedData.rng3040,'rng3040')">
+								{{speedData.rng3040}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getServiceBrakeCumulativeTotal('rng3040')}}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="4050">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> 40-50 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getServiceEventsCellBgColorByValue(speedData.rng4050,'rng4050')">
+								{{speedData.rng4050}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getServiceBrakeCumulativeTotal('rng4050')}}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="50">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> &gt;50 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getServiceEventsCellBgColorByValue(speedData.rng50,'rng50')">
+								{{speedData.rng50}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getServiceBrakeCumulativeTotal('rng50')}}</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="serviceDisplayedColumns; sticky: true"></tr>
+						<tr mat-row *matRowDef="let row; columns: serviceDisplayedColumns;"></tr>
+						<tr mat-footer-row *matFooterRowDef="serviceDisplayedColumns; sticky: true"></tr>
+					</table>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.EVENTS_LOCATION' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingServiceBrakeByLocation" mode="indeterminate"></mat-progress-bar>
+				<div class="card p-3 mb-3">
+					<ul id="legend" class="list-unstyled mb-3">
+						<li *ngFor="let range of serviceBrakeByLocationData.titles">
+							<span class="dot dot--{{range}}" [style.background-color]="getColourToServiceBrakeMap(range)"></span>
+							{{range}}
+						</li>
+					</ul>
+					<div id="criticalZonesMap" class="border">
+						<div class="bg"></div>
+						<div class="dots">
+							<div class="dot" *ngFor="let dataPoint of serviceBrakeByLocationData.data"
+								[style.left]="calcOffsetLeft(dataPoint.x)" [style.top]="calcOffsetRight(dataPoint.y)"
+								[style.background-color]="getColourToServiceBrakeMap(dataPoint.range)"
+								[attr.title]="dataPoint.readtimeop">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</mat-tab>
+
+	<mat-tab [label]="'OPERATIONAL_PRACTICES.PARKING_BRAKE' | translate">
+
+		<mat-progress-bar *ngIf="loadingParkingFilters" mode="indeterminate"></mat-progress-bar>
+		<div class="bg-white pl-3 pt-3 pr-3 mb-3">
+			<div class="row">
+				<div class="col">
+					<mat-form-field class="example-full-width">
+						<input matInput [(ngModel)]="parkingBrakeStartDate" [ngModelOptions]="{standalone: true}"
+							[max]="parkingBrakeEndDate" [matDatepicker]="parkingBrakeStartDatePicker"
+							(click)="parkingBrakeStartDatePicker.open()" (ngModelChange)="loadParkingBrakeFilters()"
+							[disabled]="loadingServiceFilters" readonly
+							[placeholder]="'ROAD_CONDITION.FROM' | translate">
+						<mat-datepicker-toggle matSuffix [for]="parkingBrakeStartDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #parkingBrakeStartDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<div class="col">
+					<mat-form-field class="example-full-width">
+						<input matInput [(ngModel)]="parkingBrakeEndDate" [ngModelOptions]="{standalone: true}"
+							[min]="parkingBrakeStartDate" [matDatepicker]="parkingBrakeEndDatePicker"
+							(click)="parkingBrakeEndDatePicker.open()" (ngModelChange)="loadParkingBrakeFilters()"
+							[disabled]="loadingServiceFilters" readonly [placeholder]="'ROAD_CONDITION.TO' | translate">
+						<mat-datepicker-toggle matSuffix [for]="parkingBrakeEndDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #parkingBrakeEndDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.WORK_SHIFT' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedParkingWorkShift" [disabled]="loadingParkingFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let jornada of parkingBrakeFilters?.data?.jornada" [value]="jornada">
+								{{jornada}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.GROUP' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedParkingGroup" [disabled]="loadingParkingFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let turno of parkingBrakeFilters?.data?.turno" [value]="turno">
+								{{turno}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.WORKER' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedParkingWorker" [disabled]="loadingParkingFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let operador of parkingBrakeFilters?.data?.operador" [value]="operador">
+								{{operador}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="col">
+					<mat-form-field>
+						<mat-label>{{'OPERATIONAL_PRACTICES.SPEED' | translate}}</mat-label>
+						<mat-select [(ngModel)]="selectedParkingSpeed" [disabled]="loadingParkingFilters">
+							<mat-option>{{'OPERATIONAL_PRACTICES.ALL' | translate}}</mat-option>
+							<mat-option *ngFor="let velocidad of parkingBrakeFilters?.data?.velocidad"
+								[value]="velocidad">
+								{{velocidad}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="col text-right">
+					<button mat-raised-button color="primary" (click)="loadParkingBrakeData()"
+						[disabled]="loadingParkingFilters">{{'OPERATIONAL_PRACTICES.FILTER' | translate}}</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_DAY' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingParkingBrakeByDay" mode="indeterminate"></mat-progress-bar>
+				<div class="bg-white pl3 pr-3">
+					<canvas id="brakeParkingByDayChart" width="500" height="275">{{ brakeParkingByDayChart }}</canvas>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-sm-6 mb-3">
+						<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_GROUP' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingParkingBrakeByGroup" mode="indeterminate"></mat-progress-bar>
+						<div class="card p-3">
+							<canvas id="brakeParkingByGroupChart" width="300"
+								height="300">{{ brakeParkingByGroupChart }}</canvas>
+						</div>
+					</div>
+					<div class="col-sm-6 mb-3">
+						<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_SWITCH' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingParkingBrakeByWorkShift" mode="indeterminate">
+						</mat-progress-bar>
+						<div class="card p-3">
+							<canvas id="brakeParkingByWorkShiftChart" width="300"
+								height="300">{{ brakeParkingByWorkShiftChart }}</canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6 mb-3">
+				<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.NUMBER_OF_EVENTS_BY_SPEED' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingParkingBrakeBySpeed" mode="indeterminate"></mat-progress-bar>
+				<div class="table-container">
+					<table mat-table [dataSource]="parkingDataSource">
+
+						<ng-container matColumnDef="index">
+							<th mat-header-cell *matHeaderCellDef></th>
+							<td mat-cell *matCellDef="let i = index"> {{i+1}} </td>
+							<td mat-footer-cell *matFooterCellDef></td>
+						</ng-container>
+
+						<ng-container matColumnDef="worker">
+							<th mat-header-cell *matHeaderCellDef>
+								{{'OPERATIONAL_PRACTICES.WORKER' | translate}}
+							</th>
+							<td mat-cell *matCellDef="let speedData"> {{speedData.operador}} </td>
+							<td mat-footer-cell *matFooterCellDef></td>
+						</ng-container>
+
+						<ng-container matColumnDef="caex">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> CAEX </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell">
+								{{speedData.caex}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">Total:</td>
+						</ng-container>
+
+						<ng-container matColumnDef="speed">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell">
+								{{'OPERATIONAL_PRACTICES.SPEED' | translate}}
+							</th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell">
+								{{speedData.velocidad}} </td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getParkingBrakeAverageSpeed()}}
+							</td>
+						</ng-container>
+
+						<ng-container matColumnDef="total">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> Total </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell">
+								{{speedData.rng16 + speedData.rng1624 + speedData.rng2432 + speedData.rng32}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getParkingBrakeCumulativeTotal('rng16')+getParkingBrakeCumulativeTotal('rng1624')+getParkingBrakeCumulativeTotal('rng2432')+getParkingBrakeCumulativeTotal('rng32')}}
+							</td>
+						</ng-container>
+
+						<ng-container matColumnDef="16">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> &lt;1.6 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getParkingEventsCellBgColorByValue(speedData.rng16, 'rng16')">
+								{{speedData.rng16}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getParkingBrakeCumulativeTotal('rng16')}}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="1624">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> 1.6-2.4 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getParkingEventsCellBgColorByValue(speedData.rng1624, 'rng1624')">
+								{{speedData.rng1624}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getParkingBrakeCumulativeTotal('rng1624')}}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="2432">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> 2.4-3.2 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getParkingEventsCellBgColorByValue(speedData.rng2432, 'rng2432')">
+								{{speedData.rng2432}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getParkingBrakeCumulativeTotal('rng2432')}}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="32">
+							<th mat-header-cell *matHeaderCellDef class="numeric-cell"> &gt;3.2 </th>
+							<td mat-cell *matCellDef="let speedData" class="numeric-cell"
+								[style.background-color]="getParkingEventsCellBgColorByValue(speedData.rng32, 'rng32')">
+								{{speedData.rng32}}
+							</td>
+							<td mat-footer-cell *matFooterCellDef class="numeric-cell">
+								{{getParkingBrakeCumulativeTotal('rng32')}}</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="parkingDisplayedColumns; sticky: true"></tr>
+						<tr mat-row *matRowDef="let row; columns: parkingDisplayedColumns;"></tr>
+						<tr mat-footer-row *matFooterRowDef="parkingDisplayedColumns; sticky: true"></tr>
+					</table>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<h5 class="mb-3">{{'OPERATIONAL_PRACTICES.EVENTS_LOCATION' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingParkingBrakeByLocation" mode="indeterminate"></mat-progress-bar>
+				<div class="card p-3 mb-3">
+					<ul id="legend" class="list-unstyled mb-3">
+						<li *ngFor="let point of parkingBrakeByLocationData.titles">
+							<span class="dot dot--{{point}}"
+								[style.background-color]="getColourToParkingBrakeMap(point)"></span>
+							{{point}}
+						</li>
+					</ul>
+					<div id="criticalZonesMap" class="border">
+						<div class="bg"></div>
+						<div class="dots">
+							<div class="dot" *ngFor="let dataPoint of parkingBrakeByLocationData.data"
+								[style.left]="calcOffsetLeft(dataPoint.x)" [style.top]="calcOffsetRight(dataPoint.y)"
+								[style.background-color]="getColourToParkingBrakeMap(dataPoint.range)"
+								[attr.title]="dataPoint.readtimeop">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</mat-tab>
+</mat-tab-group>
+
+<div *ngIf="survey">
+	<mat-card style="text-align: center">
+		<button mat-stroked-button color="primary" (click)="goToSurvey()">{{'KCH.SURVEY' | translate}}</button>
+	</mat-card>
+</div>

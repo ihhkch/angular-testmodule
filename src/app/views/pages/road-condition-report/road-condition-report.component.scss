@@ -1,0 +1,53 @@
+  #historicalEvolutionTable .table th, #historicalEvolutionTable .table td { min-width: 100px; }
+  #historicalEvolutionTable .table tr td:nth-child(1) { min-width: 200px; }
+
+#criticalZonesMap, #topCriticalZonesMap {
+    position: relative;
+}
+
+#criticalZonesMap .dot, #topCriticalZonesMap .dot {
+    position: absolute;
+}
+
+#criticalZonesMap .bg, #topCriticalZonesMap .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url('../../../../assets/media/bg/mina-Model.svg');
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: contain;
+    width: 100%;
+    padding-top: 75%;
+    opacity: 0.5;
+}
+
+.dots {
+    width: 100%;
+    padding-top: 75%;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    opacity: 0.9;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0,0,0,0.5);
+}
+
+#legend li {
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+#legend li .dot {
+    display: inline-block;
+    margin-right: 0.25rem;
+    position: relative;
+}
+
+.dot:hover {
+    opacity: 1;
+}

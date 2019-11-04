@@ -1,0 +1,82 @@
+.table-container {
+    overflow: auto;
+    max-height: 600px;
+}
+
+.numeric-cell{
+  text-align: right;
+}
+
+  table {
+    width: 100%;
+  }
+
+  tr.mat-footer-row {
+    font-weight: bold;
+  }
+
+  table td { font-size: 0.85rem; padding: 0.5rem 0.2rem; }
+  table tr.mat-row { height: 2rem; }
+  table tr.mat-header-row { height: 3rem; font-weight: bold; }
+  table tr.mat-footer-row { height: 2rem; }
+  td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:last-of-type {
+	padding-right: 0.2rem;
+  }
+  td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
+	padding-left: 0.2rem;
+  }
+
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+
+  #criticalZonesMap, #topCriticalZonesMap {
+    position: relative;
+}
+
+#criticalZonesMap .dot, #topCriticalZonesMap .dot {
+    position: absolute;
+}
+
+#criticalZonesMap .bg, #topCriticalZonesMap .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url('../../../../assets/media/bg/mina-Model.svg');
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: contain;
+    width: 100%;
+    padding-top: 75%;
+    opacity: 0.5;
+}
+
+.dots {
+    width: 100%;
+    padding-top: 75%;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    opacity: 0.9;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0,0,0,0.5);
+}
+
+#legend li {
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+#legend li .dot {
+    display: inline-block;
+    margin-right: 0.25rem;
+    position: relative;
+}
+
+.dot:hover {
+    opacity: 1;
+}

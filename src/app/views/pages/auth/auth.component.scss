@@ -1,0 +1,40 @@
+// import login css
+@import "../../../../assets/css/demo1/pages/custom/general/login/login-1.css";
+
+kt-auth, .kt-login {
+	height: 100%;
+
+	.mat-form-field {
+		width: 100%;
+	}
+
+	// add extra right padding when displaying spinner in button
+	.kt-spinner {
+		padding-right: 3rem !important;
+	}
+}
+
+.login-bg {
+	background-image: url('../../../../assets/media/bg/bg-komatsu-fhd.jpg');
+	background-size: cover;
+	background-position: 50% 50%;
+	height: 100%;
+	.login-bg-soften {
+		background: rgba(255, 255, 255, 0.75);
+		height: 100%;
+	}
+	.login-contents {
+		text-align: center;
+		padding: 5rem 0;
+		margin-top: 1rem;
+		.logo {
+			margin: 2rem 0 4rem;
+			background-position: center center;
+			background-image: url('../../../../assets/media/logos/komatsu-fhd.png');
+			background-repeat: no-repeat;
+			background-size: contain;
+			height: 60px;
+		}
+	}
+}
+

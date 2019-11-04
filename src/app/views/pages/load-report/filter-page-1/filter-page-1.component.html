@@ -1,0 +1,80 @@
+<div class="card pl-3 pt-3 pr-3 mb-3">
+
+	<div class="row">
+		<div class="col">
+			<mat-form-field>
+				<input matInput [(ngModel)]="startDate" [ngModelOptions]="{standalone: true}"
+					   [max]="endDate" [matDatepicker]="startDatePicker" (click)="startDatePicker.open()"
+					   placeholder="Choose a date" readonly>
+				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #startDatePicker></mat-datepicker>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field>
+				<input matInput [(ngModel)]="endDate" [ngModelOptions]="{standalone: true}"
+					   [min]="startDate" [matDatepicker]="endDatePicker" (click)="endDatePicker.open()"
+					   placeholder="Choose a date" readonly>
+				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #endDatePicker></mat-datepicker>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-label>Turno</mat-label>
+			<mat-select [(ngModel)]="filterParams.turno">
+				<mat-option>Todos</mat-option>
+				<mat-option *ngFor="let turno of turnos" [value]="turno">{{turno}}</mat-option>
+			</mat-select>
+		</div>
+		<ng-container *ngIf="reportPage == 2">
+			<!-- Página "Tiempo y Condición..." -->
+			<div class="col">
+				<mat-label>CAEX</mat-label>
+				<mat-select [(ngModel)]="filterParams.caex">
+					<mat-option>Todos</mat-option>
+					<mat-option *ngFor="let caex of caexs" [value]="caex">{{caex}}</mat-option>
+				</mat-select>
+			</div>
+			<div class="col">
+				<mat-label>Jornada</mat-label>
+				<mat-select [(ngModel)]="filterParams.jornada">
+					<mat-option>Todas</mat-option>
+					<mat-option *ngFor="let jornada of jornadas" [value]="jornada">{{jornada}}</mat-option>
+				</mat-select>
+			</div>
+			<div class="col">
+				<mat-label>Operador</mat-label>
+				<mat-select [(ngModel)]="filterParams.operador">
+					<mat-option>Todos</mat-option>
+					<mat-option *ngFor="let operador of operadores" [value]="operador">{{operador}}</mat-option>
+				</mat-select>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="reportPage == 1">
+			<!-- Página "Productividad..." -->
+			<div class="col">
+				<mat-label>Equipo</mat-label>
+				<mat-select [(ngModel)]="filterParams.equipo">
+					<mat-option>Todos</mat-option>
+					<mat-option *ngFor="let equipo of equipos" [value]="equipo">{{equipo}}</mat-option>
+				</mat-select>
+			</div>
+			<div class="col">
+				<mat-label>Pala</mat-label>
+				<mat-select [(ngModel)]="filterParams.pala">
+					<mat-option>Todas</mat-option>
+					<mat-option *ngFor="let pala of palas" [value]="pala">{{pala}}</mat-option>
+				</mat-select>
+			</div>
+		</ng-container>
+		<div class="col text-right">
+			<button mat-raised-button color="primary" (click)="filterData()">Filtrar</button>
+		</div>
+	</div>
+	<ng-container *ngIf="reportPage == 1">
+		<mat-progress-bar *ngIf="loadingFilterPage1" mode="indeterminate"></mat-progress-bar>
+	</ng-container>
+	<ng-container *ngIf="reportPage == 2">
+		<mat-progress-bar *ngIf="loadingFilterPage2" mode="indeterminate"></mat-progress-bar>
+	</ng-container>
+</div>

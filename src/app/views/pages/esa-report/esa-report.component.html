@@ -1,0 +1,116 @@
+<div class="row">
+	<div class="col-md-12">
+		<kt-portlet [class]="'kt-portlet--height-fluid'">
+			<kt-portlet-header [title]="'OLOA.FILTERS' | translate">
+			</kt-portlet-header>
+			<kt-portlet-body>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm">
+							<mat-form-field>
+								<mat-label>{{'OLOA.MINE_SITE' | translate}}</mat-label>
+								<mat-select [(ngModel)]="selectedMineSite">
+									<mat-option *ngFor="let mineSite of oloaGrants?.mineSites"
+										[value]="mineSite.idMineSite">
+										{{mineSite.mineSiteName}}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div class="col-sm">
+							<mat-form-field>
+								<mat-label>{{'OLOA.EQUIPMENT' | translate}}</mat-label>
+								<mat-select [(ngModel)]="selectedEquipment">
+									<mat-option *ngFor="let equipment of oloaGrants?.equipments"
+										[value]="equipment.idEquipment">
+										{{equipment.serialNumber}}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div class="col-sm">
+							<mat-form-field>
+								<mat-label>{{'OLOA.COMPONENT' | translate}}</mat-label>
+								<mat-select [(ngModel)]="selectedComponent">
+									<mat-option *ngFor="let component of oloaGrants?.components"
+										[value]="component.alias">
+										{{component.description}}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div class="col-sm">
+							<button mat-raised-button
+								[disabled]="!selectedMineSite || !selectedEquipment || !selectedComponent"
+								(click)="loadChart()" color="primary">{{'OLOA.FILTER' | translate}}</button>
+						</div>
+					</div>
+				</div>
+				<mat-progress-bar *ngIf="loadingFilters" mode="indeterminate"></mat-progress-bar>
+			</kt-portlet-body>
+		</kt-portlet>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<kt-portlet [class]="'kt-portlet--height-fluid'">
+			<kt-portlet-header [title]="'RMS'">
+			</kt-portlet-header>
+			<kt-portlet-body>
+				<div [hidden]="!showRMS" class="chart-container" style="position: relative;">
+					<canvas id="rmsChart">{{ rmsChart }}</canvas>
+				</div>
+				<div [hidden]="showRMS || loadingRMS">
+					{{'OLOA.NO_DATA' | translate}}
+				</div>
+				<div *ngIf="loadingRMS">
+					{{'OLOA.RETRIEVING_DATA' | translate}}
+					<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+				</div>
+			</kt-portlet-body>
+		</kt-portlet>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<kt-portlet [class]="'kt-portlet--height-fluid'">
+			<kt-portlet-header [title]="'BPFO'">
+			</kt-portlet-header>
+			<kt-portlet-body>
+				<div [hidden]="!showBPFO" class="chart-container" style="position: relative;">
+					<canvas id="bpfoChart">{{ bpfoChart }}</canvas>
+				</div>
+				<div [hidden]="showBPFO || loadingBPFO">
+					{{'OLOA.NO_DATA' | translate}}
+				</div>
+				<div *ngIf="loadingBPFO">
+					{{'OLOA.RETRIEVING_DATA' | translate}}
+					<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+				</div>
+			</kt-portlet-body>
+		</kt-portlet>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<kt-portlet [class]="'kt-portlet--height-fluid'">
+			<kt-portlet-header [title]="'ESA.CORRELATION_RATIO' | translate">
+			</kt-portlet-header>
+			<kt-portlet-body>
+				<div [hidden]="!showCorrelation" class="chart-container" style="position: relative;">
+					<canvas id="correlationChart">{{ correlationChart }}</canvas>
+				</div>
+				<div [hidden]="showCorrelation || loadingCorrelation">
+					{{'OLOA.NO_DATA' | translate}}
+				</div>
+				<div *ngIf="loadingCorrelation">
+					{{'OLOA.RETRIEVING_DATA' | translate}}
+					<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+				</div>
+			</kt-portlet-body>
+		</kt-portlet>
+	</div>
+</div>

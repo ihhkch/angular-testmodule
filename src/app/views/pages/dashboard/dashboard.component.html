@@ -1,0 +1,115 @@
+<div class="container-fluid">
+	<div class="isa_error" *ngIf="serviceError"
+		style="margin: 10px 0px; padding:12px; color: #D8000C; background-color: #FFD2D2;">
+		<i class="fa fa-times-circle" style="margin:10px 22px; font-size:2em; vertical-align:middle;"></i>
+		{{'SERVICE.PROBLEM' | translate}}
+	</div>
+	<div class="row justify-content-md-center">
+		<mat-spinner *ngIf="!reportsReady" style="margin:0 auto;"></mat-spinner>
+		<div class="row">
+			<div *ngIf="menuSociety == 'KCH'">
+				<img src="./assets/media/menu/kch-menu.jpg" class="img-fluid">
+			</div>
+			<div *ngIf="menuSociety == 'KRCC'">
+				<img src="./assets/media/menu/krcc-menu.jpg" class="img-fluid">
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div *ngIf="showLoadReport">
+				<div class="col-xl">
+					<div class="row">
+						<img src="./assets/media/menu/load-thumbnail.jpg"
+							style="margin: 20px;width: 250px; height: 180px;" class="img-thumbnail">
+					</div>
+					<div class="row">
+						<div class="text-center" style="width: 100%">
+							<button mat-raised-button color="primary"
+								(click)="redirectToReport(reportsIds.load_report)">
+								GESTIÓN DE CARGUÍO
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="showOperationlPracticesReport">
+				<div class="col-xl">
+					<div class="row">
+						<img src="./assets/media/menu/operational-thumbnail.jpg"
+							style="margin: 20px;width: 250px; height: 180px;" class="img-thumbnail">
+					</div>
+					<div class="row">
+						<div class="text-center" style="width: 100%">
+							<button mat-raised-button color="primary"
+								(click)="redirectToReport(reportsIds.operational_practices_report)">
+								PRÁCTICAS OPERACIONALES
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="showRoadReport">
+				<div class="col-xl">
+					<div class="row">
+						<img src="./assets/media/menu/road-thumbnail.jpg"
+							style="margin: 20px;width: 250px; height: 180px;" class="img-thumbnail">
+					</div>
+					<div class="row">
+						<div class="text-center" style="width: 100%">
+							<button mat-raised-button color="primary"
+								(click)="redirectToReport(reportsIds.road_report)">
+								CONDICIÓN DE CAMINOS
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="showMonitoringReport">
+				<div class="col-xl">
+					<div class="row">
+						<img src="./assets/media/menu/report-thumbnail.jpg"
+							style="margin: 20px;width: 250px; height: 180px;" class="img-thumbnail">
+					</div>
+					<div class="row">
+						<div class="text-center" style="width: 100%">
+							<button mat-raised-button color="primary"
+								(click)="redirectToReport(reportsIds.monitoring_report)">
+								MONITOREO
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="showOloaReport">
+				<div class="col-xl">
+					<div class="row">
+						<img src="./assets/media/menu/oloa-thumbnail.png"
+							style="margin: 20px;width: 250px; height: 180px;" class="img-thumbnail">
+					</div>
+					<div class="row">
+						<div class="text-center" style="width: 100%">
+							<button mat-raised-button color="primary"
+								(click)="redirectToReport(reportsIds.oloa_report)">
+								OLOA: On-Line Oil Analysis
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="showEsaReport">
+				<div class="col-xl">
+					<div class="row">
+						<img src="./assets/media/menu/esa-thumbnail.png"
+							style="margin: 20px;width: 250px; height: 180px;" class="img-thumbnail">
+					</div>
+					<div class="row">
+						<div class="text-center" style="width: 100%">
+							<button mat-raised-button color="primary" (click)="redirectToReport(reportsIds.esa_report)">
+								ESA: Electrical Signature Analysis
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

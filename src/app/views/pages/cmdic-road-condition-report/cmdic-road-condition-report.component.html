@@ -1,0 +1,178 @@
+<div class="row">
+	<div class="col-md-6">
+		<div class="bg-white pl-3 pt-3 pr-3">
+			<div class="row">
+				<div class="col">
+					<mat-form-field class="example-full-width">
+						<input matInput [(ngModel)]="startDate" [ngModelOptions]="{standalone: true}"
+							   [matDatepicker]="startDatePicker" (click)="startDatePicker.open()"
+							   [placeholder]="'ROAD_CONDITION.FROM' | translate" readonly>
+						<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #startDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<div class="col text-right">
+					<button mat-raised-button color="primary"
+							(click)="filter()">{{'OLOA.FILTER' | translate}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<mat-tab-group (selectedTabChange)="onLinkClick($event)">
+
+	<mat-tab [label]="'ROAD_CONDITION.CRITICAL_ZONES_RANKING' | translate">
+
+		<div class="mb-3">
+			<h5 class="mb-3">{{'ROAD_CONDITION.CRITICAL_ZONES' | translate}}</h5>
+			<mat-progress-bar *ngIf="loadingTopCriticalZonesMap" mode="indeterminate"></mat-progress-bar>
+			<div class="bg-white p-3">
+				<ul id="legend" class="list-unstyled mb-3">
+					<li *ngFor="let point of topCriticalZonesMap.titles">
+						<span class="dot dot--{{point}}" [style.background-color]="getColourToTopMap(point)"></span>
+						{{point}}
+					</li>
+				</ul>
+				<div id="topCriticalZonesMap" class="border">
+					<div class="bg"></div>
+					<div class="dots">
+						<div class="dot" *ngFor="let dataPoint of topCriticalZonesMap.data"
+							 [style.left]="calcOffsetLeft(dataPoint.x)"
+							 [style.top]="calcOffsetRight(dataPoint.y)"
+							 [style.background-color]="getColourToTopMap(dataPoint.grsev)"
+							 [attr.title]="getDotTitle(dataPoint, 'top-critical-zones')">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<h5 class="mb-3">{{'ROAD_CONDITION.CRITICAL_ZONES' | translate}}</h5>
+			<mat-progress-bar *ngIf="loadingCriticalZonesTable" mode="indeterminate"></mat-progress-bar>
+			<div class="bg-white table-responsive">
+				<table mat-table [dataSource]="dataSource" style="width: 100%;">
+
+					<ng-container matColumnDef="zone">
+						<th mat-header-cell *matHeaderCellDef> Zone </th>
+						<td mat-cell *matCellDef="let criticalZone"> {{criticalZone.groupRoad}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="zoneName">
+						<th mat-header-cell *matHeaderCellDef> Name </th>
+						<td mat-cell *matCellDef="let criticalZone"> {{criticalZone.mineZone}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="xCoordinate">
+						<th mat-header-cell *matHeaderCellDef class="text-right"> X </th>
+						<td mat-cell *matCellDef="let criticalZone" class="text-right"> {{criticalZone.x}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="yCoordinate">
+						<th mat-header-cell *matHeaderCellDef class="text-right"> Y </th>
+						<td mat-cell *matCellDef="let criticalZone" class="text-right"> {{criticalZone.y}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="zCoordinate">
+						<th mat-header-cell *matHeaderCellDef class="text-right"> Z </th>
+						<td mat-cell *matCellDef="let criticalZone" class="text-right"> {{criticalZone.z}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="xDelta">
+						<th mat-header-cell *matHeaderCellDef class="text-right"> Delta X[mts] </th>
+						<td mat-cell *matCellDef="let criticalZone" class="text-right"> {{criticalZone.deltax}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="yDelta">
+						<th mat-header-cell *matHeaderCellDef class="text-right"> Delta Y[mts] </th>
+						<td mat-cell *matCellDef="let criticalZone" class="text-right"> {{criticalZone.deltay}} </td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+				</table>
+			</div>
+		</div>
+
+	</mat-tab>
+
+	<mat-tab [label]="'ROAD_CONDITION.PIT_AND_DUMP_DEBRIS_CRITICAL_ZONES' | translate">
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<h5 class="mb-3">{{'ROAD_CONDITION.CRITICAL_ZONES' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingCriticalZonesMap" mode="indeterminate"></mat-progress-bar>
+				<div class="bg-white p-3">
+					<ul id="legend" class="list-unstyled mb-3">
+						<li *ngFor="let point of criticalZonesMap.titles">
+											<span class="dot dot--{{point}}"
+												  [style.background-color]="getColourToMap(point)"></span>
+							{{point}}
+						</li>
+					</ul>
+					<div id="criticalZonesMap" class="border">
+						<div class="bg"></div>
+						<div class="dots">
+							<div class="dot" *ngFor="let dataPoint of criticalZonesMap.data"
+								 [style.left]="calcOffsetLeft(dataPoint.x)"
+								 [style.top]="calcOffsetRight(dataPoint.y)"
+								 [style.background-color]="getColourToMap(dataPoint.grsev)"
+								 [attr.title]="getDotTitle(dataPoint, 'critical-zones')">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 mb-3">
+				<h5 class="mb-3">{{'ROAD_CONDITION.TOP_CRITICAL_ZONES' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingTopCriticalZonesMap" mode="indeterminate"></mat-progress-bar>
+				<div class="bg-white p-3">
+					<ul id="legend" class="list-unstyled mb-3">
+						<li *ngFor="let point of topCriticalZonesMap.titles">
+											<span class="dot dot--{{point}}"
+												  [style.background-color]="getColourToTopMap(point)"></span>
+							{{point}}
+						</li>
+					</ul>
+					<div id="topCriticalZonesMap" class="border">
+						<div class="bg"></div>
+						<div class="dots">
+							<div class="dot" *ngFor="let dataPoint of topCriticalZonesMap.data"
+								 [style.left]="calcOffsetLeft(dataPoint.x)"
+								 [style.top]="calcOffsetRight(dataPoint.y)"
+								 [style.background-color]="getColourToTopMap(dataPoint.grsev)"
+								 [attr.title]="getDotTitle(dataPoint, 'top-critical-zones')">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<h5 class="mb-3">{{'ROAD_CONDITION.HISTORICAL_EVOLUTION' | translate}}</h5>
+			<mat-progress-bar *ngIf="loadingHistoricalEvolutionTable" mode="indeterminate"></mat-progress-bar>
+			<div id="historicalEvolutionTable" class="bg-white table-responsive">
+				<table class="table table-condensed table-sm table-striped table-hover mb-0">
+					<thead>
+					<tr class="bg-dark text-white">
+						<th>Fecha / Severidad</th>
+					</tr>
+					<tr>
+						<th class="font-weight-bold">Zona</th>
+					</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+
+	</mat-tab>
+
+</mat-tab-group>
+
+<div *ngIf="survey">
+	<mat-card style="text-align: center">
+		<button mat-stroked-button color="primary" (click)="goToSurvey()">{{'KCH.SURVEY' | translate}}</button>
+	</mat-card>
+</div>

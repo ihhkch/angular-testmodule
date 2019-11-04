@@ -1,0 +1,209 @@
+<h1 class="h2 mb-3">{{ 'LOAD.REPORT_TITLE' | translate }}</h1>
+
+<mat-tab-group id="loadReportTabGroup">
+	<mat-tab label="{{ 'LOAD.REPORT_TITLE_TIME' | translate }}">
+
+		<app-filter-page-1 (changeFilter)="onChangeFilterPage2($event)" [idReport]="idReport"
+						   [reportPage]="2"></app-filter-page-1>
+
+		<div class="p-3 mb-3 bg-white">
+			<div class="row">
+				<app-scorcard class="col-3" [scorcard]="scorcard6"></app-scorcard>
+				<div class="col-9">
+					<ul class="list-unstyled mb-0" style="line-height: 1;">
+						<li>
+							<strong>A0</strong>
+							= {{'LOAD.INFO_A0' | translate}}
+						</li>
+						<li>
+							<strong>C0</strong>
+							= {{'LOAD.INFO_C0' | translate}}
+						</li>
+						<li>
+							<strong>{{'LOAD.EFFECT_INDEX' | translate}}</strong> = A0/C0
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="row mb-3">
+					<div class="col-4">
+						<mat-progress-bar *ngIf="loadingPage2PieChart3" mode="indeterminate"></mat-progress-bar>
+						<app-grafico [width]="150" [height]="150" [grafico]="graph10"
+									 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+					</div>
+					<div class="col-4">
+						<mat-progress-bar *ngIf="loadingPage2PieChart2" mode="indeterminate"></mat-progress-bar>
+						<app-grafico [width]="150" [height]="150" [grafico]="graph9"
+									 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+					</div>
+					<div class="col-4">
+						<mat-progress-bar *ngIf="loadingPage2PieChart1" mode="indeterminate"></mat-progress-bar>
+						<app-grafico [width]="150" [height]="150" [grafico]="graph8"
+									 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+					</div>
+				</div>
+				<div class="mb-3">
+					<mat-progress-bar *ngIf="loadingPage2Table1" mode="indeterminate"></mat-progress-bar>
+					<h6 class="bg-dark text-white p-3 mb-0">Pala / A0 / C0</h6>
+					<div id="reportLoadO1Table" class="table-responsive bg-white reportLoadO1Table">
+						<table class="table table-sm table-hover table-striped mb-0 border">
+							<thead class="bg-secondary"></thead>
+							<tbody></tbody>
+							<tfoot class="bg-secondary"></tfoot>
+						</table>
+					</div>
+				</div>
+				<div class="mb-3">
+					<mat-progress-bar *ngIf="loadingPage2Table3" mode="indeterminate"></mat-progress-bar>
+					<h6 class="bg-dark text-white p-3 mb-0">{{'LOAD.SHIFT_EFFECT_INDEX' | translate}}</h6>
+					<div id="reportLoadO3Table" class="table-responsive bg-white reportLoadO3Table"
+						 style="overflow-y: scroll; max-height: 30rem;">
+						<table class="table table-sm table-hover table-striped mb-0 border">
+							<thead class="bg-secondary">
+							<tr></tr>
+							</thead>
+							<tbody></tbody>
+							<tfoot class="bg-secondary">
+							<tr></tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+					<mat-progress-bar *ngIf="loadingPage2Table4" mode="indeterminate"></mat-progress-bar>
+					<div id="reportLoadO6Table" class="table-responsive bg-white reportLoadO6Table">
+						<div class="table-responsive">
+							<table class="table table-sm table-hover table-striped mb-0 border">
+								<thead class="bg-dark text-white">
+								<tr>
+									<th></th>
+									<th style="font-size: 1rem;">{{'LOAD.SHOVEL' | translate}}</th>
+									<th class="text-right" style="font-size: 1rem;">{{'LOAD.NOT_PROD_HRS' | translate}}</th>
+									<th class="text-right" style="font-size: 1rem;">{{'LOAD.PERFORMANCE' | translate}}</th>
+									<th class="text-right" style="font-size: 1rem;">{{'LOAD.POTENTIAL_TONS' | translate}}</th>
+								</tr>
+								</thead>
+								<tbody></tbody>
+								<tfoot class="bg-secondary"></tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<h5 class="title mb-3">{{'LOAD.EFFECT_INDEX' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingPage2HorizontalBarChart1"
+										  mode="indeterminate"></mat-progress-bar>
+						<app-grafico [width]="250" [height]="150" [grafico]="graph11"
+									 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+					</div>
+					<div class="col-6">
+						<h5 class="title mb-3">{{'LOAD.ACULAT_TIME' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingPage2HorizontalBarChart2"
+										  mode="indeterminate"></mat-progress-bar>
+						<app-grafico [width]="250" [height]="150" [grafico]="graph12"
+									 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+					</div>
+				</div>
+				<div class="mb-4">
+					<mat-progress-bar *ngIf="loadingPage2Table2" mode="indeterminate"></mat-progress-bar>
+					<div id="reportLoadO2Table" class="table-responsive bg-white border reportLoadO2Table"
+						 style="overflow-y: scroll; max-height: 30rem;">
+						<table class="table table-sm table-striped table-hover mb-0">
+							<thead class="bg-dark text-white">
+							<tr>
+								<th width="5%"></th>
+								<th width="40%" style="font-size: 1rem;">{{'LOAD.CAEX_OPERATOR' | translate}}</th>
+								<th colspan="2" style="font-size: 1rem;">{{'LOAD.EFFECT_INDEX' | translate}}</th>
+								<th width="5%" style="font-size: 1rem;">{{'LOAD.CYCLES' | translate}}</th>
+							</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</mat-tab>
+	<mat-tab label="{{ 'LOAD.REPORT_TITLE' | translate }}">
+
+		<app-filter-page-1 (changeFilter)="onChangeFilterPage1($event)" [idReport]="idReport"
+						   [reportPage]="1"></app-filter-page-1>
+
+		<div class="p-3 mb-3 bg-white">
+			<div class="row">
+				<app-scorcard class="col" [scorcard]="scorcard1"></app-scorcard>
+				<app-scorcard class="col" [scorcard]="scorcard2"></app-scorcard>
+				<app-scorcard class="col" [scorcard]="scorcard3"></app-scorcard>
+				<app-scorcard class="col" [scorcard]="scorcard4"></app-scorcard>
+				<app-scorcard class="col" [scorcard]="scorcard5"></app-scorcard>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6 mb-3">
+				<h5 class="mb-3">{{'LOAD.HISTOGRAM_NET_TONS' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingGrafico1" mode="indeterminate"></mat-progress-bar>
+				<app-grafico [width]="500" [height]="250" [grafico]="grafico1"
+							 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+			</div>
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-6 mb-3">
+						<h5 class="mb-3">{{'LOAD.AVERAGE_LOAD_WORK_SHIFT' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingGrafico2" mode="indeterminate"></mat-progress-bar>
+						<app-grafico [width]="250" [height]="210" [grafico]="grafico2"
+									 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+					</div>
+					<div class="col-sm-6 mb-3">
+						<h5 class="mb-3">{{'LOAD.AVERAGE_LOAD_MINING_GROUPS' | translate}}</h5>
+						<mat-progress-bar *ngIf="loadingGrafico3" mode="indeterminate"></mat-progress-bar>
+						<app-grafico [width]="250" [height]="210" [grafico]="grafico3"
+									 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-3 mb-3">
+				<h5 class="mb-3">{{'LOAD.PRESSURE_CAEX' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingGrafico6" mode="indeterminate"></mat-progress-bar>
+				<app-grafico [width]="250" [height]="300" [grafico]="grafico6"
+							 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+			</div>
+			<div class="col-sm-3 mb-3">
+				<h5 class="mb-3">{{'LOAD.PRESSURE_CYCLE' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingGrafico7" mode="indeterminate"></mat-progress-bar>
+				<app-grafico [width]="250" [height]="300" [grafico]="grafico7"
+							 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+			</div>
+			<div class="col-sm-3 mb-3">
+				<h5 class="mb-3">{{'LOAD.LOAD_AVERAGE_BY_SHOVEL' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingGrafico4" mode="indeterminate"></mat-progress-bar>
+				<app-grafico [width]="250" [height]="300" [grafico]="grafico4"
+							 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+			</div>
+			<div class="col-sm-3 mb-3">
+				<h5 class="mb-3">{{'LOAD.PASS_BY_LOADER' | translate}}</h5>
+				<mat-progress-bar *ngIf="loadingGrafico5" mode="indeterminate"></mat-progress-bar>
+				<app-grafico [width]="250" [height]="300" [grafico]="grafico5"
+							 [actualizarGrafico]="actualizarGrafico"></app-grafico>
+			</div>
+		</div>
+
+	</mat-tab>
+</mat-tab-group>
+
+<div *ngIf="survey">
+	<mat-card style="text-align: center">
+		<button mat-stroked-button color="primary" (click)="goToSurvey()">{{'KCH.SURVEY' | translate}}</button>
+	</mat-card>
+</div>
